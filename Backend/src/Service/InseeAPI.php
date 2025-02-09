@@ -20,6 +20,22 @@ class InseeAPI
         $this->clientSecret = $clientSecret;
         $this->inseeApiKey = $inseeApiKey;
     }
+    public function getCJCategoryByCode(string $code): array
+    {
+        // Appel à l'API INSEE
+        $response = $this->client->request('GET', "{$this->baseUrl}/metadonnees/V1/codes/cj/n3/" . $code, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->inseeApiKey,
+                'Accept' => 'application/json',
+            ]
+        ]);
+
+        // Traitement des données reçues
+        $data = $response->toArray();
+        $category = $data['intitule'] ?? 'Non renseigné';
+
+        return ['code' => $code, 'intitule' => $category];
+    }
 
     public function getNafApeByCode(string $code): array
     {
@@ -123,6 +139,6 @@ class InseeAPI
         }
 
         $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
-        return $dateObj ? $dateObj->format('d F Y') : $date; // Format jour mois année
+        return $dateObj ? $dateObj->format('d F Y') : $date;
     }
 }

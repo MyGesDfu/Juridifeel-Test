@@ -16,19 +16,19 @@
         <div class="result__data">
           <h4 class="data__title"> Informations clés </h4>
             <ul class="data__list">
-              <li class="data__element"><span class="data__label">Forme sociale :</span> {{ data.formeSociale }}</li>
-              <li class="data__element" *ngIf="data?.siretDetails?.adresse"><span class="data__label">Siège social :</span> {{ data.siretDetails.adresse }}</li>
-              <li class="data__element" *ngIf="!data?.siretDetails?.adresse"><span class="data__label">Siège social :</span> Adresse non renseignée</li>
-              <li class="data__element"><span class="data__label">Capital social :</span> {{ data.capitalSocial }}</li>
-              <li class="data__element"><span class="data__label">Numéro de SIREN :</span> {{ data.numeroSiren }}</li>
-              <li class="data__element"><span class="data__label">Numéro de SIRET :</span> {{ data.numeroSiret }}</li>
-              <li class="data__element"><span class="data__label">Numéro RCS :</span> {{ data.numeroRCS }}</li>
-              <li class="data__element"><span class="data__label">Immatriculation :</span> {{ data.immatriculation }}</li>
-              <li class="data__element"><span class="data__label">Clôture de l'exercice social :</span> {{ data.clotureExerciceSocial }}</li>
-              <li class="data__element"><span class="data__label">N° TVA Intracommunautaire :</span> {{ data.numeroTVA }}</li>
-              <li class="data__element"><span class="data__label">Code NAF ou APE :</span> {{ data.codeNafApe }}
-              <span *ngIf="nafDetails">({{ nafDetails }})</span></li>
-              <li class="data__element"><span class="data__label">Activité principale déclarée :</span> {{ data.activitePrincipale }}</li>
+                <li class="data__element"><span class="data__label">Forme sociale :</span> <a class="data__value" (click)="copyToClipboard(cjn3Details)">{{ cjn3Details }}</a></li>
+                <li class="data__element" *ngIf="data?.siretDetails?.adresse"><span class="data__label">Siège social :</span> <a class="data__value" (click)="copyToClipboard(data.siretDetails.adresse)">{{ data.siretDetails.adresse }}</a></li>
+                <li class="data__element" *ngIf="!data?.siretDetails?.adresse"><span class="data__label">Siège social :</span> <a class="data__value" (click)="copyToClipboard('Adresse non renseignée')">Adresse non renseignée</a></li>
+                <li class="data__element"><span class="data__label">Capital social :</span> <a class="data__value" (click)="copyToClipboard(data.capitalSocial)">{{ data.capitalSocial }}</a></li>
+                <li class="data__element"><span class="data__label">Numéro de SIREN :</span> <a class="data__value" (click)="copyToClipboard(data.numeroSiren)">{{ data.numeroSiren }}</a></li>
+                <li class="data__element"><span class="data__label">Numéro de SIRET :</span> <a class="data__value" (click)="copyToClipboard(data.numeroSiret)">{{ data.numeroSiret }}</a></li>
+                <li class="data__element"><span class="data__label">Numéro RCS :</span> <a class="data__value" (click)="copyToClipboard(data.numeroRCS)">{{ data.numeroRCS }}</a></li>
+                <li class="data__element"><span class="data__label">Immatriculation :</span> <a class="data__value" (click)="copyToClipboard(data.immatriculation)">{{ data.immatriculation }}</a></li>
+                <li class="data__element"><span class="data__label">Clôture de l'exercice social :</span> <a class="data__value" (click)="copyToClipboard(data.clotureExerciceSocial)">{{ data.clotureExerciceSocial }}</a></li>
+                <li class="data__element"><span class="data__label">N° TVA Intracommunautaire :</span> <a class="data__value" (click)="copyToClipboard(data.numeroTVA)">{{ data.numeroTVA }}</a></li>
+                <li class="data__element"><span class="data__label">Code NAF ou APE :</span> <a class="data__value" (click)="copyToClipboard(data.codeNafApe)">{{ data.codeNafApe }}
+                <span *ngIf="nafDetails">({{ nafDetails }})</span></a></li>
+                <li class="data__element"><span class="data__label">Activité principale déclarée :</span> <a class="data__value" (click)="copyToClipboard(data.activitePrincipale)">{{ data.activitePrincipale }}</a></li>
             </ul>
         </div> 
       </div>

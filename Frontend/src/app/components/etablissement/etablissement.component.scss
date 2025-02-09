@@ -113,14 +113,17 @@ ul {
         margin: 10px;
         padding: 30px;
         border-radius: 10px;
-        
+        display: flex;
+        flex-direction: column;
     }
 }
 
 .data {
     &__label {
         color : #667085;
+        width: 200px;
     }
+
     &__title {
         font-size: 24px;
         margin-bottom: 20px;
@@ -129,6 +132,12 @@ ul {
     &__element {
         margin: 20px 0;
         font-size: 14px;
+        display: flex;
+    }
+    &__value:hover {
+        transform: translateY(-1px);
+        color : #07132c;
+        cursor: pointer;
     }
 }
 .content {
@@ -141,4 +150,9 @@ ul {
     text-align: center;
     font-size: 14px;
     color: #777;
+}
+
+.mat-snack-bar-action.mat-button:hover {
+    background-color: white;
+    color: #ffffff;
 }

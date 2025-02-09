@@ -50,7 +50,7 @@ services:
       - ./server/nginx1.conf:/etc/nginx/nginx.conf
       - ./Backend:/var/www/html
     ports:
-      - "9001:80"  # Remplace le port pour le backend, par exemple 9001
+      - "9001:80"
     depends_on:
       - backend
     networks:

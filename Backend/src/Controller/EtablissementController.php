@@ -66,4 +66,21 @@ class EtablissementController extends AbstractController
             return $this->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
         }
     }
+
+    #[Route('/api/formejuridique/{code}', name: 'get_forme_juridique', methods: ['GET'])]
+    public function getFormeJuridique(string $code): JsonResponse
+    {
+        try {
+            // Récupération des données de la forme juridique
+            $data = $this->inseeApiService->getCJCategoryByCode($code);
+
+            if (empty($data)) {
+                return $this->json(['error' => 'Aucune donnée trouvée pour ce code'], 404);
+            }
+
+            return $this->json($data);
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
+        }
+    }
 }

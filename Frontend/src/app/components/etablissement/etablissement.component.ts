@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { SirenService } from '../../services/siren.service';
 import { NafService } from '../../services/naf.service';
 import { SiretService } from '../../services/siret.service';
+import { Cjn3Service } from '../../services/cjn3.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-etablissement',
@@ -18,8 +20,15 @@ export class EtablissementComponent implements OnInit {
   data: any = null;
   error: string = '';
   nafDetails: string = '';
+  cjn3Details: string = '';
 
-  constructor(private sirenService: SirenService, private nafService: NafService, private siretService: SiretService) {}
+  constructor(
+    private sirenService: SirenService,
+    private nafService: NafService,
+    private siretService: SiretService,
+    private snackBar: MatSnackBar,
+    private cjn3Service: Cjn3Service
+  ) {}
 
   ngOnInit(): void {}
 
@@ -30,12 +39,13 @@ export class EtablissementComponent implements OnInit {
           console.log('Données récupérées:', response);
           this.data = response;
           this.error = '';
+          
+          // Conversion du nom en format Titre
           function toTitleCase(str: string): string {
             return str
               .toLowerCase()
               .replace(/\b\w/g, char => char.toUpperCase());
           }
-
           this.data.nom = toTitleCase(this.data.nom);
 
           // Récupérer le NIC et construire le SIRET
@@ -45,7 +55,11 @@ export class EtablissementComponent implements OnInit {
           // Recherche par SIRET pour obtenir des informations supplémentaires
           this.getSiretDetails(siret);
 
-          // Récupérer les détails du code NAF si présent
+          
+          if (this.data.formeSociale) {
+            this.getCJN3Category(this.data.formeSociale);
+          }
+
           if (this.data.codeNafApe) {
             this.getNafDetails(this.data.codeNafApe);
           }
@@ -76,17 +90,32 @@ export class EtablissementComponent implements OnInit {
     });
   }
 
+  getCJN3Category(code: string): void {
+    this.cjn3Service.getCJN3Category(code).subscribe({
+      next: (response) => {
+        console.log('Données récupérées pour CJN3:', response);
+        this.cjn3Details = response.intitule || 'Détails introuvables';
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des données pour le CJN3:', err);
+        this.cjn3Details = 'Erreur lors de la récupération de la Forme Juridique';
+      }
+    });
+  }
+
   getSiretDetails(siret: string): void {
     this.siretService.getSiretDetails(siret).subscribe({
       next: (response) => {
         console.log('Données récupérées pour SIRET:', response);
         this.data.siretDetails = response;
         this.error = '';
+        
         function toTitleCase(str: string): string {
           return str
             .toLowerCase()
             .replace(/\b\w/g, char => char.toUpperCase());
         }
+
         if (this.data.siretDetails.siegeSocial && this.data.siretDetails) {
           const adresseParts = [
             this.data.siretDetails.numeroVoieEtablissement,
@@ -108,6 +137,19 @@ export class EtablissementComponent implements OnInit {
           ? 'Aucune donnée trouvée pour ce SIRET.'
           : 'Impossible de récupérer les données. Vérifiez le SIRET et réessayez.';
       }
+    });
+  }
+
+  copyToClipboard(value: string): void {
+    navigator.clipboard.writeText(value).then(() => {
+      this.snackBar.open('Donnée copiée !', '', {
+        duration: 3000,
+      });
+    }).catch(err => {
+      console.error('Erreur lors de la copie dans le presse-papiers:', err);
+      this.snackBar.open('Erreur lors de la copie', 'Fermer', {
+        duration: 3000,
+      });
     });
   }
 }
