@@ -20,10 +20,19 @@ class EtablissementController extends AbstractController
     public function getEtablissement(string $siren): JsonResponse
     {
         try {
+            // Appel au service pour obtenir les données de l'établissement
             $data = $this->inseeApiService->getEtablissementBySiren($siren);
+
+            // Vérifie si des données ont été trouvées
+            if (empty($data)) {
+                return $this->json(['error' => 'Aucune donnée trouvée pour ce SIREN'], 404);
+            }
+
+            // Retour des données sous forme de JSON
             return $this->json($data);
         } catch (\Exception $e) {
-            return $this->json(['error' => 'Établissement introuvable'], 404);
+            // Gestion des erreurs et retour d'un message d'erreur personnalisé
+            return $this->json(['error' => 'Erreur lors de la récupération des données : ' . $e->getMessage()], 500);
         }
     }
 }

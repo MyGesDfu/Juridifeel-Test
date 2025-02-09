@@ -20,17 +20,23 @@ export class EtablissementComponent implements OnInit {
   ngOnInit(): void {}
 
   onSearch(): void {
-    if (this.siren.trim().length === 9) { // Vérifie que le SIREN est valide
+    if (this.siren.trim().length === 9) {
+      // Appeler le service pour récupérer les données de l'établissement
       this.sirenService.getEtablissement(this.siren).subscribe({
         next: (response) => {
-          console.log('Données récupérées:', response); // DEBUG: Vérifier la structure des données
-          this.data = response; // Assigner les données récupérées
-          this.error = ''; 
+          console.log('Données récupérées:', response); 
+          this.data = response; // Enregistrer les données reçues
+          this.error = ''; // Réinitialiser les erreurs
         },
         error: (err) => {
           console.error('Erreur lors de la récupération des données:', err);
-          this.error = 'Impossible de récupérer les données. Vérifiez le SIREN et réessayez.';
-          this.data = null;
+          // En fonction de l'erreur retournée, afficher un message d'erreur
+          if (err.status === 404) {
+            this.error = 'Aucune donnée trouvée pour ce SIREN.';
+          } else {
+            this.error = 'Impossible de récupérer les données. Vérifiez le SIREN et réessayez.';
+          }
+          this.data = null; // Réinitialiser les données
         }
       });
     } else {

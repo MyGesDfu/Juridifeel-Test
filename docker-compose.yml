@@ -1,5 +1,5 @@
 services:
-  # Service pour Symfony
+  # Service pour Symfony (Backend)
   backend:
     build:
       context: ./Backend
@@ -15,6 +15,21 @@ services:
     depends_on:
       - db
 
+  # Service pour Frontend (Angular)
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./Frontend:/app
+    networks:
+      - symfony-network
+    depends_on:
+      - backend
+
   # Service pour MySQL
   db:
     image: mysql:5.7
@@ -27,19 +42,20 @@ services:
     networks:
       - symfony-network
 
-  # Service pour Nginx
+  # Service Nginx pour Symfony (Backend)
   nginx:
     image: nginx:alpine
     container_name: symfony_nginx
     volumes:
-      - ./server/nginx.conf:/etc/nginx/nginx.conf
+      - ./server/nginx1.conf:/etc/nginx/nginx.conf
       - ./Backend:/var/www/html
     ports:
-      - "80:80"
+      - "9001:80"  # Remplace le port pour le backend, par exemple 9001
     depends_on:
       - backend
     networks:
       - symfony-network
+
 
 volumes:
   mysql_data:

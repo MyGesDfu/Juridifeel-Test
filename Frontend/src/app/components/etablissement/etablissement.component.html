@@ -3,26 +3,23 @@
     <input type="text" [(ngModel)]="siren" placeholder="Entrez un numéro de SIREN">
     <button (click)="onSearch()">Rechercher</button>
   
-    <!-- Message d'erreur -->
     <div *ngIf="error" class="error">{{ error }}</div>
-  
-    <!-- Affichage des données -->
     <div *ngIf="data">
       <h3>{{ data.nom }}</h3>
-      <h4>Informations clés</h4>
-      <ul>
-        <li><strong>Forme sociale :</strong> {{ data.formeSociale }}</li>
-        <li><strong>Siège social :</strong> {{ data.siegeSocial }}</li>
-        <li><strong>Capital social :</strong> {{ data.capitalSocial }}</li>
-        <li><strong>Numéro de SIREN :</strong> {{ data.numeroSiren }}</li>
-        <li><strong>Numéro de SIRET :</strong> {{ data.numeroSiret }}</li>
-        <li><strong>Numéro RCS :</strong> {{ data.numeroRCS }}</li>
-        <li><strong>Immatriculation :</strong> {{ data.immatriculation }}</li>
-        <li><strong>Clôture de l'exercice social :</strong> {{ data.clotureExerciceSocial }}</li>
-        <li><strong>N° TVA Intracommunautaire :</strong> {{ data.numeroTVA }}</li>
-        <li><strong>Code NAF ou APE :</strong> {{ data.codeNafApe }}</li>
-        <li><strong>Activité principale déclarée :</strong> {{ data.activitePrincipale }}</li>
-      </ul>
+      <h4> Informations clés </h4>
+        <ul>
+            <li>Forme sociale : {{ data.formeSociale }}</li>
+            <li>Siège social : {{ data.siegeSocial }}</li>
+            <li>Capital social : {{ data.capitalSocial }}</li>
+            <li>Numéro de SIREN : {{ data.numeroSiren }}</li>
+            <li>Numéro de SIRET : {{ data.numeroSiret }}</li>
+            <li>Numéro RCS : {{ data.numeroRCS }}</li>
+            <li>Immatriculation : {{ data.immatriculation }}</li>
+            <li>Clôture de l'exercice social : {{ data.clotureExerciceSocial }}</li>
+            <li>N° TVA Intracommunautaire : {{ data.numeroTVA }}</li>
+            <li>Code NAF ou APE : {{ data.codeNafApe }} </li>
+            <li>Activité principale déclarée : {{ data.activitePrincipale }}</li>
+        </ul>
     </div>
-  </div>
+</div>
   
