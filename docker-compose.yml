@@ -1,0 +1,49 @@
+services:
+  # Service pour Symfony
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: symfony_backend
+    working_dir: /var/www/html
+    volumes:
+      - ./Backend:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - symfony-network
+    depends_on:
+      - db
+
+  # Service pour MySQL
+  db:
+    image: mysql:5.7
+    container_name: symfony_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - symfony-network
+
+  # Service pour Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: symfony_nginx
+    volumes:
+      - ./server/nginx.conf:/etc/nginx/nginx.conf
+      - ./Backend:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - symfony-network
+
+volumes:
+  mysql_data:
+
+networks:
+  symfony-network:
+    driver: bridge
