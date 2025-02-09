@@ -21,10 +21,27 @@ class InseeAPI
         $this->inseeApiKey = $inseeApiKey;
     }
 
+    public function getNafApeByCode(string $code): array
+    {
+        // Appel à l'API INSEE
+        $response = $this->client->request('GET', "{$this->baseUrl}/metadonnees/V1/codes/nafr2/sousClasse/" . $code, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->inseeApiKey,
+                'Accept' => 'application/json',
+            ]
+        ]);
+
+        // Traitement des données reçues
+        $data = $response->toArray();
+        $nafApe = $data['intitule'] ?? 'Non renseigné';
+
+        return ['code' => $code, 'intitule' => $nafApe];
+    }
+
     public function getEtablissementBySiren(string $siren): array
     {
         // Appel à l'API INSEE
-        $response = $this->client->request('GET', 'https://api.insee.fr/entreprises/sirene/V3.11/siren/' . $siren, [
+        $response = $this->client->request('GET', "{$this->baseUrl}/entreprises/sirene/V3.11/siren/" . $siren, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->inseeApiKey,
                 'Accept' => 'application/json',
@@ -40,22 +57,50 @@ class InseeAPI
         $numeroSiren = $this->formatSiren($uniteLegale['siren']) ?? null;
         $nicSiege = $periode['nicSiegeUniteLegale'] ?? null;
 
-        $etablissement = [
+        $informationSiren = [
             'nom' => $periode['denominationUniteLegale'] ?? 'Non renseigné',
             'formeSociale' => $periode['categorieJuridiqueUniteLegale'] ?? 'Non renseigné',
-            'siegeSocial' => $nicSiege ?? 'Non renseigné',
             'numeroSiren' => $numeroSiren ?? 'Non renseigné',
             'numeroSiret' => $numeroSiren && $nicSiege ? $numeroSiren . ' ' . $nicSiege : 'Non renseigné',
             'numeroRCS' => $numeroSiren && isset($periode['denominationUniteLegale']) ? $this->formatRCS($numeroSiren, $periode['denominationUniteLegale']) : 'Non renseigné',
             'immatriculation' => isset($uniteLegale['dateCreationUniteLegale']) ? $this->formatImmatriculation($uniteLegale['dateCreationUniteLegale']) : 'Non renseigné',
-            'clotureExerciceSocial' => 'Non disponible', // Besoin d'une autre source
+            'clotureExerciceSocial' => 'Non disponible',
             'numeroTVA' => 'FR' . ($data['uniteLegale']['siren'] ?? 'Non renseigné'),
             'codeNafApe' => $periode['activitePrincipaleUniteLegale'] ?? 'Non renseigné',
             'activitePrincipale' => $periode['activitePrincipaleUniteLegale'] ?? 'Non renseigné',
-            'capitalSocial' => 'Non renseigné', // Information manquante dans l'API INSEE
+            'capitalSocial' => 'Non renseigné',
+            'nicSiege' => $nicSiege ?? 'Non renseigné',
         ];
 
-        return $etablissement;
+        return $informationSiren;
+    }
+
+    public function getEtablissementBySiret(string $siret): array
+    {
+        // Appel à l'API INSEE
+        $response = $this->client->request('GET', "{$this->baseUrl}/entreprises/sirene/V3.11/siret/" . $siret, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->inseeApiKey,
+                'Accept' => 'application/json',
+            ]
+        ]);
+
+        // Traitement des données reçues
+        $data = $response->toArray();
+
+        $etablissement = $data['etablissement'] ?? [];
+        $adresseEtablissement = $etablissement['adresseEtablissement'] ?? [];
+        $informationsSiret = [
+            'siegeSocial' => $etablissement['etablissementSiege'] ? true : false,
+            'numeroVoieEtablissement' => $adresseEtablissement['numeroVoieEtablissement'] ?? 'Non renseigné',
+            'typeVoieEtablissement' => $adresseEtablissement['typeVoieEtablissement'] ?? 'Non renseigné',
+            'libelleVoieEtablissement' => $adresseEtablissement['libelleVoieEtablissement'] ?? 'Non renseigné',
+            'codePostalEtablissement' => $adresseEtablissement['codePostalEtablissement'] ?? 'Non renseigné',
+            'libelleCommuneEtablissement' => $adresseEtablissement['libelleCommuneEtablissement'] ?? 'Non renseigné',
+            'dateDernierTraitementEtablissement' => $etablissement['dateDernierTraitementEtablissement'] ? $this->formatImmatriculation($etablissement['dateDernierTraitementEtablissement']) : 'Non renseigné',
+        ];
+
+        return $informationsSiret;
     }
 
     // Méthode pour formater le numéro de SIREN

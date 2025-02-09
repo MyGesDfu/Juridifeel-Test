@@ -1,25 +1,32 @@
 <div class="container">
-    <h2>Rechercher un établissement par numéro de SIREN</h2>
-    <input type="text" [(ngModel)]="siren" placeholder="Entrez un numéro de SIREN">
-    <button (click)="onSearch()">Rechercher</button>
-  
-    <div *ngIf="error" class="error">{{ error }}</div>
-    <div *ngIf="data">
-      <h3>{{ data.nom }}</h3>
-      <h4> Informations clés </h4>
-        <ul>
-            <li>Forme sociale : {{ data.formeSociale }}</li>
-            <li>Siège social : {{ data.siegeSocial }}</li>
-            <li>Capital social : {{ data.capitalSocial }}</li>
-            <li>Numéro de SIREN : {{ data.numeroSiren }}</li>
-            <li>Numéro de SIRET : {{ data.numeroSiret }}</li>
-            <li>Numéro RCS : {{ data.numeroRCS }}</li>
-            <li>Immatriculation : {{ data.immatriculation }}</li>
-            <li>Clôture de l'exercice social : {{ data.clotureExerciceSocial }}</li>
-            <li>N° TVA Intracommunautaire : {{ data.numeroTVA }}</li>
-            <li>Code NAF ou APE : {{ data.codeNafApe }} </li>
-            <li>Activité principale déclarée : {{ data.activitePrincipale }}</li>
-        </ul>
-    </div>
+    <header>
+      <h2>Rechercher un établissement par numéro de SIREN</h2>
+      <input type="text" [(ngModel)]="siren" placeholder="Entrez un numéro de SIREN">
+      <button (click)="onSearch()">Rechercher</button>
+    </header>
+    <section>
+      <div *ngIf="error" class="error">{{ error }}</div>
+      <div *ngIf="data">
+        <h3>{{ data.nom }}</h3>
+        <h4> Informations clés </h4>
+          <ul>
+              <li>Forme sociale : {{ data.formeSociale }}</li>
+              <li *ngIf="data?.siretDetails?.adresse">Siège social : {{ data.siretDetails.adresse }}</li>
+              <li *ngIf="!data?.siretDetails?.adresse">Siège social : Adresse non renseignée</li>
+              <li>Capital social : {{ data.capitalSocial }}</li>
+              <li>Numéro de SIREN : {{ data.numeroSiren }}</li>
+              <li>Numéro de SIRET : {{ data.numeroSiret }}</li>
+              <li>Numéro RCS : {{ data.numeroRCS }}</li>
+              <li>Immatriculation : {{ data.immatriculation }}</li>
+              <li>Clôture de l'exercice social : {{ data.clotureExerciceSocial }}</li>
+              <li>N° TVA Intracommunautaire : {{ data.numeroTVA }}</li>
+              <li>
+                  Code NAF ou APE : {{ data.codeNafApe }}
+                  <span *ngIf="nafDetails">({{ nafDetails }})</span>
+                </li>
+              <li>Activité principale déclarée : {{ data.activitePrincipale }}</li>
+          </ul>
+      </div> 
+    </section>
 </div>
   

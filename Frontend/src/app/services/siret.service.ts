@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class NafService {
+export class SiretService {
 
-  private apiUrl = 'http://localhost:9001/api/naf';
+  private apiUrl = 'http://localhost:9001/api/siret';
 
   constructor(private http: HttpClient) {}
 
-  getNafDetails(code: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${code}`);
+  getSiretDetails(siren: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${siren}`);
   }
 }

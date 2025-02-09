@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class SirenService {
 
-  private apiUrl = 'http://localhost:9001/api/etablissement'; // Remplace cette URL par celle de ton API Symfony
+  private apiUrl = 'http://localhost:9001/api/etablissement';
 
   constructor(private http: HttpClient) {}
 
-  getEtablissement(siren: string): Observable<any> {
+  getEtablissementBySiren(siren: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${siren}`);
   }
 }
