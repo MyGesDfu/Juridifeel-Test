@@ -30,6 +30,13 @@ export class EtablissementComponent implements OnInit {
           console.log('Données récupérées:', response);
           this.data = response;
           this.error = '';
+          function toTitleCase(str: string): string {
+            return str
+              .toLowerCase()
+              .replace(/\b\w/g, char => char.toUpperCase());
+          }
+
+          this.data.nom = toTitleCase(this.data.nom);
 
           // Récupérer le NIC et construire le SIRET
           const nic = this.data.nicSiege;
