@@ -78,7 +78,7 @@ class InseeAPI
             'formeSociale' => $periode['categorieJuridiqueUniteLegale'] ?? 'Non renseigné',
             'numeroSiren' => $numeroSiren ?? 'Non renseigné',
             'numeroSiret' => $numeroSiren && $nicSiege ? $numeroSiren . ' ' . $nicSiege : 'Non renseigné',
-            'numeroRCS' => $numeroSiren && isset($periode['denominationUniteLegale']) ? $this->formatRCS($numeroSiren, $periode['denominationUniteLegale']) : 'Non renseigné',
+            'numeroRCS' => $numeroSiren && isset($periode['denominationUniteLegale']) ? $this->formatRCS($numeroSiren) : 'Non renseigné',
             'immatriculation' => isset($uniteLegale['dateCreationUniteLegale']) ? $this->formatImmatriculation($uniteLegale['dateCreationUniteLegale']) : 'Non renseigné',
             'clotureExerciceSocial' => 'Non disponible',
             'numeroTVA' => 'FR' . ($data['uniteLegale']['siren'] ?? 'Non renseigné'),
@@ -126,9 +126,9 @@ class InseeAPI
     }
 
     // Méthode pour formater le numéro RCS
-    private function formatRCS(string $siren, string $denomination): string
+    private function formatRCS(string $siren): string
     {
-        return $siren . ' RCS ' . $denomination;
+        return $siren . ' RCS ';
     }
 
     // Méthode pour formater la date d'immatriculation
@@ -139,6 +139,29 @@ class InseeAPI
         }
 
         $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
-        return $dateObj ? $dateObj->format('d F Y') : $date;
+        if (!$dateObj) {
+            return $date;
+        }
+
+        $moisFrancais = [
+            'January' => 'janvier',
+            'February' => 'février',
+            'March' => 'mars',
+            'April' => 'avril',
+            'May' => 'mai',
+            'June' => 'juin',
+            'July' => 'juillet',
+            'August' => 'août',
+            'September' => 'septembre',
+            'October' => 'octobre',
+            'November' => 'novembre',
+            'December' => 'décembre'
+        ];
+
+        $moisAnglais = $dateObj->format('F');
+        $moisTraduit = $moisFrancais[$moisAnglais] ?? $moisAnglais;
+
+        return $dateObj->format('d') . ' ' . $moisTraduit . ' ' . $dateObj->format('Y');
     }
+
 }

@@ -22,7 +22,13 @@
                 <li class="data__element"><span class="data__label">Capital social :</span> <a class="data__value" (click)="copyToClipboard(data.capitalSocial)">{{ data.capitalSocial }}</a></li>
                 <li class="data__element"><span class="data__label">Numéro de SIREN :</span> <a class="data__value" (click)="copyToClipboard(data.numeroSiren)">{{ data.numeroSiren }}</a></li>
                 <li class="data__element"><span class="data__label">Numéro de SIRET :</span> <a class="data__value" (click)="copyToClipboard(data.numeroSiret)">{{ data.numeroSiret }}</a></li>
-                <li class="data__element"><span class="data__label">Numéro RCS :</span> <a class="data__value" (click)="copyToClipboard(data.numeroRCS)">{{ data.numeroRCS }}</a></li>
+                <li class="data__element">
+                  <span class="data__label">Numéro RCS :</span>
+                  <a class="data__value" 
+                     (click)="copyToClipboard(data.numeroRCS + (data.siretDetails?.libelleCommuneEtablissement || ''))">
+                    {{ data.numeroRCS }} {{ data.siretDetails?.libelleCommuneEtablissement || 'Non renseigné' }}
+                  </a>
+                </li>
                 <li class="data__element"><span class="data__label">Immatriculation :</span> <a class="data__value" (click)="copyToClipboard(data.immatriculation)">{{ data.immatriculation }}</a></li>
                 <li class="data__element"><span class="data__label">Clôture de l'exercice social :</span> <a class="data__value" (click)="copyToClipboard(data.clotureExerciceSocial)">{{ data.clotureExerciceSocial }}</a></li>
                 <li class="data__element"><span class="data__label">N° TVA Intracommunautaire :</span> <a class="data__value" (click)="copyToClipboard(data.numeroTVA)">{{ data.numeroTVA }}</a></li>
